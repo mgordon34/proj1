@@ -6,7 +6,7 @@ module digit_timer(
   input                             set,
   input  [ 3 : 0 ]                  set_value,
   input  [ 3 : 0 ]                  max_count,
-  output                            carry,
+  output reg                        carry,
   output                            done,
   output [ 3 : 0 ]                  count_out
 );
@@ -17,18 +17,29 @@ module digit_timer(
   always@(posedge clk)
   begin
     if (reset)
-      count <= 0;
+      count = 0;
     if (set)
-      count <= set_value;
+    begin
+      if (set_value > max_count)
+        count = max_count;
+      else
+        count = set_value;
+    end
     else if (enable)
     begin
       if (step & ~triggered)
       begin
         triggered = 'b1;
         if (done)
-          count <= max_count;
+        begin
+          count = max_count;
+          carry = 1'b1;
+        end
         else
+        begin
           count <= count - 1'b1;
+          carry = 1'b0;
+        end
       end
       else if (~step & triggered)
         triggered = 'b0;
@@ -37,6 +48,5 @@ module digit_timer(
 
   assign count_out = count;
   assign done = count == 'b0;
-  assign carry = count == max_count;
 
 endmodule

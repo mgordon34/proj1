@@ -18,6 +18,7 @@ module TimerController (
 wire clk_1Hz;
 clk_divider clk_div(clk, clk_1Hz);
 // ==============================================
+//
 
 // ==============================================
 // STATE MACHINE
@@ -81,6 +82,7 @@ begin
 		default: next_state = IDLE;
 	endcase
 end
+// ==============================================
 
 
 // ==============================================
@@ -162,8 +164,8 @@ assign done = sec_ones_done
     && sec_tens_done
     && min_ones_done
     && min_tens_done;
-
 // ==============================================
+
 
 // ==============================================
 // Display
@@ -173,9 +175,7 @@ dec2_7seg disp2(min_ones_count[3:0], hex2);
 dec2_7seg disp1(sec_tens_count[3:0], hex1);
 dec2_7seg disp(sec_ones_count[3:0], hex0);
 
-assign ledr[5:1] = {8{state == DONE}};
-assign ledr[6] = state == START;
-assign ledr[9:7] = state;
+assign ledr[9:0] = {10{state == DONE && clk_1Hz}};
 // ==============================================
 
 endmodule
