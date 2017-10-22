@@ -18,7 +18,7 @@ module digit_timer(
   begin
     if (reset)
       count = 0;
-    if (set)
+    else if (set)
     begin
       if (set_value > max_count)
         count = max_count;
