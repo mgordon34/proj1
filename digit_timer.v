@@ -17,7 +17,11 @@ module digit_timer(
   always@(posedge clk)
   begin
     if (reset)
-      count = 0;
+	 begin
+      count = 'b0;
+		triggered = 'b0;
+		carry = 1'b0;
+	 end
     else if (set)
     begin
       if (set_value > max_count)
